@@ -38,6 +38,7 @@ function deb( description , variable ) {
 
 var parser = require( '..' ).options
 	.package( require( '../package.json' ) )
+	.usage( 'Usage is: %s --name <name> [--age <age>]' )
 	.opt( "name" , "bob" ).string.mandatory
 		.description( "your name" )
 	.opt( [ "age" , "a" ] ).number
