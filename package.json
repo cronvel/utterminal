@@ -14,7 +14,8 @@
     "doormen": "^0.7.22",
     "lazyness": "^1.0.1",
     "string-kit": "^0.8.7",
-    "terminal-kit": "^1.26.0"
+    "terminal-kit": "^1.26.0",
+    "tree-kit": "^0.5.27"
   },
   "devDependencies": {},
   "scripts": {
