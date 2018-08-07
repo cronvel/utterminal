@@ -1,6 +1,6 @@
 {
   "name": "utterminal",
-  "private": true ,
+  "private": true,
   "version": "0.0.1",
   "description": "The Ultimate Terminal lib!",
   "main": "lib/utterminal.js",
@@ -10,7 +10,12 @@
   "directories": {
     "test": "test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "doormen": "^0.7.22",
+    "lazyness": "^1.0.1",
+    "string-kit": "^0.8.7",
+    "terminal-kit": "^1.26.0"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "tea-time -R dot"
