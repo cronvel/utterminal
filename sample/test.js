@@ -37,19 +37,19 @@ function deb( description , variable ) {
 }
 
 var parser = require( '..' ).options
+	.package( require( '../package.json' ) )
 	.opt( "name" , "bob" ).string.mandatory
 		.description( "your name" )
 	.opt( [ "age" , "a" ] ).number
 		.description( "your age" ) ;
 
 
-
+/*
 deb( "Parser" , parser ) ;
-
-
-
 var args = parser.parse() ;
-
 deb( "CLI options" , args ) ;
+*/
 
+var args = parser.run() ;
+deb( "CLI options" , args ) ;
 
