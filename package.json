@@ -1,0 +1,38 @@
+{
+  "name": "utterminal",
+  "private": true ,
+  "version": "0.0.1",
+  "description": "The Ultimate Terminal lib!",
+  "main": "lib/utterminal.js",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "tea-time -R dot"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cronvel/utterminal.git"
+  },
+  "keywords": [
+    "terminal",
+    "opt"
+  ],
+  "author": "Cédric Ronvel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cronvel/utterminal/issues"
+  },
+  "copyright": {
+    "title": "Utterminal",
+    "years": [
+      2018
+    ],
+    "owner": "Cédric Ronvel"
+  }
+}
