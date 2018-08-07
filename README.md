@@ -1,16 +1,14 @@
 
 ## The Ultimate Terminal lib!
 
-This is just brainstorming right now.
+Early alpha.
 
-This module aims to be a complete tools for writing terminal app, from parsing opt string to displaying information.
+This module aims to be a complete tools for writing terminal app, from parsing opt string to various menu.
 
-Maybe straightforward and opinionated.
+It may be straightforward and opinionated.
 
-Utterminal will pack:
-* Terminal-kit
-* Text-Machine (?)
+It is designed to be the companion of [Terminal-kit](https://github.com/cronvel/terminal-kit).
 
-Specific Utterminal features:
-* a CLI option parser minimist/optimist clone with Terminal-kit output
+Features:
+* a CLI option parser in the same mindset than minimist/optimist, but with a [Terminal-kit](https://github.com/cronvel/terminal-kit) output
 
