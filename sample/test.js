@@ -42,8 +42,9 @@ var cli = require( '..' ).cli
 	.package( require( '../package.json' ) )
 	.usage( 'Usage is: %s --name <name> [--age <age>]' )
 	.opt( [ "name" , "n" ] , "bob" ).string.mandatory
-		//.description( "your name" )
-		.description( "enter here your name enter here your name enter here your name enter here your name enter here your name enter here your name enter here your name" )
+	//.opt( [ "name" , "nsqmlfjkml" , "ansqmlfjkml" , "znsqmlfjkml" , "ensqmlfjkml" , "rnsqmlfjkml" , "tnsqmlfjkml" , "ynsqmlfjkml" , "unsqmlfjkml" , "insqmlfjkml" , "onsqmlfjkml" ] , "bob" ).string.mandatory
+		.description( "your name" )
+		//.description( "enter here your name enter here your name enter here your name enter here your name enter here your name enter here your name enter here your name" )
 	.opt( [ "age" , "a" ] ).number
 		.description( "your age" ) ;
 
