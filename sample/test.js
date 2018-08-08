@@ -41,8 +41,9 @@ function deb( description , variable ) {
 var cli = require( '..' ).cli
 	.package( require( '../package.json' ) )
 	.usage( 'Usage is: %s --name <name> [--age <age>]' )
-	.opt( "name" , "bob" ).string.mandatory
-		.description( "your name" )
+	.opt( [ "name" , "n" ] , "bob" ).string.mandatory
+		//.description( "your name" )
+		.description( "enter here your name enter here your name enter here your name enter here your name enter here your name enter here your name enter here your name" )
 	.opt( [ "age" , "a" ] ).number
 		.description( "your age" ) ;
 
