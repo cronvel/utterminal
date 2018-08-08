@@ -177,6 +177,18 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( () => cli.parse( [ 'my.log' , 'extra' ] ) ).to.throw() ;
 	} ) ;
 	
+	it( "mandatory options" , () => {
+		var cli = new Cli() ;
+		
+		cli
+			.opt( 'output' ).mandatory
+			.arg( 'input' ).mandatory ;
+		
+		expect( cli.parse( [ 'src' , '--output' , 'dest' ] ) ).to.equal( { input: 'src' , output: 'dest' } ) ;
+		expect( () => cli.parse( [ '--output' , 'dest' ] ) ).to.throw() ;
+		expect( () => cli.parse( [ 'src' ] ) ).to.throw() ;
+	} ) ;
+	
 	it( "options types" , () => {
 		var cli = new Cli() ;
 		cli.opt( 'flag' ).boolean
@@ -245,6 +257,7 @@ describe( "Advanced parser options and post-processing" , () => {
 		
 		expect( cli.parse( [ '--verbose' ] ) ).to.equal( { verbose: true } ) ;
 		expect( cli.parse( [ 'push' ] ) ).to.equal( { command: 'push' } ) ;
+		expect( () => cli.parse( [ 'push' , '--verbose' ] ) ).to.throw() ;
 		expect( cli.parse( [ '--verbose=yes' , 'push' ] ) ).to.equal( { command: 'push' , verbose: true } ) ;
 		expect( cli.parse( [ '--verbose' , '--' , 'push' ] ) ).to.equal( { command: 'push' , verbose: true } ) ;
 		expect( () => cli.parse( [ 'omg' ] ) ).to.throw() ;
@@ -272,6 +285,7 @@ describe( "Advanced parser options and post-processing" , () => {
 		
 		expect( cli.parse( [ '--verbose' ] ) ).to.equal( { verbose: true } ) ;
 		expect( cli.parse( [ 'push' ] ) ).to.equal( { command: 'push' , commandOptions: {} } ) ;
+		expect( () => cli.parse( [ 'push' , '--verbose' ] ) ).to.throw() ;
 		expect( cli.parse( [ '--verbose=yes' , 'push' ] ) ).to.equal( { command: 'push' , verbose: true , commandOptions: {} } ) ;
 		expect( cli.parse( [ '--verbose' , '--' , 'push' ] ) ).to.equal( { command: 'push' , verbose: true , commandOptions: {} } ) ;
 		expect( cli.parse( [ 'push' , '--tags' ] ) ).to.equal( { command: 'push' , commandOptions: { tags: true } } ) ;
@@ -280,5 +294,76 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( cli.parse( [ 'commit' , '--message' , 'wip' ] ) ).to.equal( { command: 'commit' , commandOptions: { message: 'wip' } } ) ;
 	} ) ;
 	
+	it( "commands with mandatory options" , () => {
+		var cli ;
+		
+		cli = new Cli() ;
+		
+		cli.strict
+			.opt( 'verbose' ).boolean
+			.command( 'push' )
+				.opt( 'tags' ).boolean
+			.command( 'commit' )
+				.opt( [ 'message' , 'm' ] ).string.mandatory
+				.arg( 'file' )
+		
+		expect( cli.parse( [ '--verbose' ] ) ).to.equal( { verbose: true } ) ;
+		expect( cli.parse( [ 'push' ] ) ).to.equal( { command: 'push' } ) ;
+		expect( cli.parse( [ 'commit' , '--message' , 'wip' ] ) ).to.equal( { command: 'commit' , message: 'wip' } ) ;
+		expect( () => cli.parse( [ 'commit' ] ) ).to.throw() ;
+		
+		cli = new Cli() ;
+		
+		cli.strict
+			.opt( 'verbose' ).boolean.mandatory
+			.command( 'push' )
+				.opt( 'tags' ).boolean
+			.command( 'commit' )
+				.opt( [ 'message' , 'm' ] ).string.mandatory
+				.arg( 'file' )
+		
+		expect( cli.parse( [ '--verbose' ] ) ).to.equal( { verbose: true } ) ;
+		expect( () => cli.parse( [ 'push' ] ) ).to.throw() ;
+		expect( cli.parse( [ '--verbose=yes' , 'push' ] ) ).to.equal( { verbose: true , command: 'push' } ) ;
+		expect( () => cli.parse( [ 'commit' , '--message' , 'wip' ] ) ).to.throw() ;
+		expect( cli.parse( [ '--verbose=yes' , 'commit' , '--message' , 'wip' ] ) ).to.equal( { verbose: true , command: 'commit' , message: 'wip' } ) ;
+		expect( () => cli.parse( [ 'commit' ] ) ).to.throw() ;
+	} ) ;
+	
+	it( "commands with splitted mandatory options" , () => {
+		var cli ;
+		
+		cli = new Cli() ;
+		
+		cli.strict.split
+			.opt( 'verbose' ).boolean
+			.command( 'push' )
+				.opt( 'tags' ).boolean
+			.command( 'commit' )
+				.opt( [ 'message' , 'm' ] ).string.mandatory
+				.arg( 'file' )
+		
+		expect( cli.parse( [ '--verbose' ] ) ).to.equal( { verbose: true } ) ;
+		expect( cli.parse( [ 'push' ] ) ).to.equal( { command: 'push' , commandOptions: {} } ) ;
+		expect( cli.parse( [ 'commit' , '--message' , 'wip' ] ) ).to.equal( { command: 'commit' , commandOptions: { message: 'wip' } } ) ;
+		expect( () => cli.parse( [ 'commit' ] ) ).to.throw() ;
+		
+		cli = new Cli() ;
+		
+		cli.strict.split
+			.opt( 'verbose' ).boolean.mandatory
+			.command( 'push' )
+				.opt( 'tags' ).boolean
+			.command( 'commit' )
+				.opt( [ 'message' , 'm' ] ).string.mandatory
+				.arg( 'file' )
+		
+		expect( cli.parse( [ '--verbose' ] ) ).to.equal( { verbose: true } ) ;
+		expect( () => cli.parse( [ 'push' ] ) ).to.throw() ;
+		expect( cli.parse( [ '--verbose=yes' , 'push' ] ) ).to.equal( { verbose: true , command: 'push' , commandOptions: {} } ) ;
+		expect( () => cli.parse( [ 'commit' , '--message' , 'wip' ] ) ).to.throw() ;
+		expect( cli.parse( [ '--verbose=yes' , 'commit' , '--message' , 'wip' ] ) ).to.equal( { verbose: true , command: 'commit' , commandOptions: { message: 'wip' } } ) ;
+		expect( () => cli.parse( [ 'commit' ] ) ).to.throw() ;
+	} ) ;
 } ) ;
 
