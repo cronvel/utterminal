@@ -36,7 +36,9 @@ function deb( description , variable ) {
 	console.log( description + ':\n' + string.inspect( { style: 'color' } , variable ) ) ;
 }
 
-var parser = require( '..' ).options
+//deb( "argv" , process.argv ) ;
+
+var cli = require( '..' ).cli
 	.package( require( '../package.json' ) )
 	.usage( 'Usage is: %s --name <name> [--age <age>]' )
 	.opt( "name" , "bob" ).string.mandatory
@@ -46,11 +48,11 @@ var parser = require( '..' ).options
 
 
 /*
-deb( "Parser" , parser ) ;
-var args = parser.parse() ;
+deb( "Parser" , cli ) ;
+var args = cli.parse() ;
 deb( "CLI options" , args ) ;
 */
 
-var args = parser.run() ;
+var args = cli.run() ;
 deb( "CLI options" , args ) ;
 
