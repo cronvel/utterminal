@@ -198,8 +198,7 @@ describe( "Advanced parser options and post-processing" , () => {
 			.opt( 'array' ).array
 			.opt( 'stringArray' ).arrayOfStrings
 			.opt( 'booleanArray' ).arrayOfBooleans
-			.opt( 'numberArray' ).arrayOfNumbers
-			;
+			.opt( 'numberArray' ).arrayOfNumbers ;
 		
 		expect( cli.parse( [ '--input' , 'src' ] ) ).to.equal( { input: 'src' } ) ;
 		expect( cli.parse( [ '--input' , 'yes' ] ) ).to.equal( { input: 'yes' } ) ;
@@ -253,7 +252,7 @@ describe( "Advanced parser options and post-processing" , () => {
 				.opt( 'tags' ).boolean
 			.command( 'commit' )
 				.opt( [ 'message' , 'm' ] ).string
-				.arg( 'file' )
+				.arg( 'file' ) ;
 		
 		expect( cli.parse( [ '--verbose' ] ) ).to.equal( { verbose: true } ) ;
 		expect( cli.parse( [ 'push' ] ) ).to.equal( { command: 'push' } ) ;
@@ -270,6 +269,7 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( () => cli.parse( [ 'push' , '--message' , 'wip' ] ) ).to.throw() ;
 		expect( cli.parse( [ 'commit' , '--message' , 'wip' ] ) ).to.equal( { command: 'commit' , message: 'wip' } ) ;
 		expect( () => cli.parse( [ 'commit' , '--tags' ] ) ).to.throw() ;
+		expect( () => cli.parse( [ 'commit' , '--message' ] ) ).to.throw() ;
 	} ) ;
 	
 	it( "commands with splitted options" , () => {
@@ -281,7 +281,7 @@ describe( "Advanced parser options and post-processing" , () => {
 				.opt( 'tags' ).boolean
 			.command( 'commit' )
 				.opt( [ 'message' , 'm' ] ).string
-				.arg( 'file' )
+				.arg( 'file' ) ;
 		
 		expect( cli.parse( [ '--verbose' ] ) ).to.equal( { verbose: true } ) ;
 		expect( cli.parse( [ 'push' ] ) ).to.equal( { command: 'push' , commandOptions: {} } ) ;
@@ -292,6 +292,7 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( cli.parse( [ '--verbose=yes' , 'push' , '--tags' ] ) ).to.equal( { command: 'push' , commandOptions: { tags: true } , verbose: true } ) ;
 		expect( cli.parse( [ '--verbose' , '--' , 'push' , '--tags' ] ) ).to.equal( { command: 'push' , commandOptions: { tags: true } , verbose: true } ) ;
 		expect( cli.parse( [ 'commit' , '--message' , 'wip' ] ) ).to.equal( { command: 'commit' , commandOptions: { message: 'wip' } } ) ;
+		expect( () => cli.parse( [ 'commit' , '--message' ] ) ).to.throw() ;
 	} ) ;
 	
 	it( "commands with mandatory options" , () => {
@@ -305,7 +306,7 @@ describe( "Advanced parser options and post-processing" , () => {
 				.opt( 'tags' ).boolean
 			.command( 'commit' )
 				.opt( [ 'message' , 'm' ] ).string.mandatory
-				.arg( 'file' )
+				.arg( 'file' ) ;
 		
 		expect( cli.parse( [ '--verbose' ] ) ).to.equal( { verbose: true } ) ;
 		expect( cli.parse( [ 'push' ] ) ).to.equal( { command: 'push' } ) ;
@@ -320,7 +321,7 @@ describe( "Advanced parser options and post-processing" , () => {
 				.opt( 'tags' ).boolean
 			.command( 'commit' )
 				.opt( [ 'message' , 'm' ] ).string.mandatory
-				.arg( 'file' )
+				.arg( 'file' ) ;
 		
 		expect( cli.parse( [ '--verbose' ] ) ).to.equal( { verbose: true } ) ;
 		expect( () => cli.parse( [ 'push' ] ) ).to.throw() ;
@@ -341,7 +342,7 @@ describe( "Advanced parser options and post-processing" , () => {
 				.opt( 'tags' ).boolean
 			.command( 'commit' )
 				.opt( [ 'message' , 'm' ] ).string.mandatory
-				.arg( 'file' )
+				.arg( 'file' ) ;
 		
 		expect( cli.parse( [ '--verbose' ] ) ).to.equal( { verbose: true } ) ;
 		expect( cli.parse( [ 'push' ] ) ).to.equal( { command: 'push' , commandOptions: {} } ) ;
@@ -356,7 +357,7 @@ describe( "Advanced parser options and post-processing" , () => {
 				.opt( 'tags' ).boolean
 			.command( 'commit' )
 				.opt( [ 'message' , 'm' ] ).string.mandatory
-				.arg( 'file' )
+				.arg( 'file' ) ;
 		
 		expect( cli.parse( [ '--verbose' ] ) ).to.equal( { verbose: true } ) ;
 		expect( () => cli.parse( [ 'push' ] ) ).to.throw() ;
@@ -364,6 +365,38 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( () => cli.parse( [ 'commit' , '--message' , 'wip' ] ) ).to.throw() ;
 		expect( cli.parse( [ '--verbose=yes' , 'commit' , '--message' , 'wip' ] ) ).to.equal( { verbose: true , command: 'commit' , commandOptions: { message: 'wip' } } ) ;
 		expect( () => cli.parse( [ 'commit' ] ) ).to.throw() ;
+	} ) ;
+	
+	it( "commands with inherited options" , () => {
+		var cli ;
+		
+		cli = new Cli() ;
+		cli.strict
+			.opt( 'verbose' ).boolean
+			.command( 'push' ) ;
+		
+		expect( () => cli.parse( [ 'push' , '--verbose' ] ) ).to.throw() ;
+		
+		cli = new Cli() ;
+		cli.strict.split
+			.opt( 'verbose' ).boolean
+			.command( 'push' ) ;
+		
+		expect( () => cli.parse( [ 'push' , '--verbose' ] ) ).to.throw() ;
+		
+		cli = new Cli() ;
+		cli.strict.inherit
+			.opt( 'verbose' ).boolean
+			.command( 'push' ) ;
+		
+		expect( cli.parse( [ 'push' , '--verbose' ] ) ).to.equal( { verbose: true , command: 'push' } ) ;
+
+		cli = new Cli() ;
+		cli.strict.split.inherit
+			.opt( 'verbose' ).boolean
+			.command( 'push' ) ;
+		
+		expect( cli.parse( [ 'push' , '--verbose' ] ) ).to.equal( { command: 'push' , commandOptions: { verbose: true } } ) ;
 	} ) ;
 } ) ;
 
