@@ -189,6 +189,23 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( () => cli.parse( [ 'src' ] ) ).to.throw() ;
 	} ) ;
 	
+	it( "when an exclusive option is set, mandatory options are not required anymore" , () => {
+		var cli = new Cli() ;
+		
+		cli
+			.opt( 'help' ).exclusive
+			.opt( 'output' ).mandatory
+			.arg( 'input' ).mandatory ;
+		
+		expect( cli.parse( [ 'src' , '--output' , 'dest' ] ) ).to.equal( { input: 'src' , output: 'dest' } ) ;
+		expect( () => cli.parse( [ '--output' , 'dest' ] ) ).to.throw() ;
+		expect( () => cli.parse( [ 'src' ] ) ).to.throw() ;
+		
+		expect( cli.parse( [ '--help' ] ) ).to.equal( { help: true } ) ;
+		expect( cli.parse( [ '--help' , '--output' , 'dest' ] ) ).to.equal( { help: true , output: 'dest' } ) ;
+		expect( cli.parse( [ 'src' , '--help' ] ) ).to.equal( { help: true , input: 'src' } ) ;
+	} ) ;
+	
 	it( "options types" , () => {
 		var cli = new Cli() ;
 		cli.opt( 'flag' ).boolean
@@ -398,5 +415,11 @@ describe( "Advanced parser options and post-processing" , () => {
 		
 		expect( cli.parse( [ 'push' , '--verbose' ] ) ).to.equal( { command: 'push' , commandOptions: { verbose: true } } ) ;
 	} ) ;
+} ) ;
+
+
+
+describe( ".run() behavior" , () => {
+	it( "find a way to test .run()" ) ;
 } ) ;
 

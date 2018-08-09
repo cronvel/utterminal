@@ -41,14 +41,18 @@ function deb( description , variable ) {
 var cli = require( '..' ).cli
 	.package( require( '../package.json' ) )
 	.usage( 'Usage is: %s --name <name> [--age <age>]' )
+	.commonCommands
+	.commonOptions
 	.optionGroup( 'ASV options' )
-		.opt( [ "name" , "n" ] , "bob" ).string.mandatory
+		.opt( [ "name" , "n" ] , "bob" ).string//.mandatory
 		//.opt( [ "name" , "nsqmlfjkml" , "ansqmlfjkml" , "znsqmlfjkml" , "ensqmlfjkml" , "rnsqmlfjkml" , "tnsqmlfjkml" , "ynsqmlfjkml" , "unsqmlfjkml" , "insqmlfjkml" , "onsqmlfjkml" ] , "bob" ).string.mandatory
 			.description( "your name" )
 			//.description( "enter here your name enter here your name enter here your name enter here your name enter here your name enter here your name enter here your name" )
 		.opt( [ "age" , "a" ] ).number
 			.description( "your age" )
 	.command( [ 'bob' , 'b' ] ) .description( 'It bobs everything up' )
+		.opt( 'supa' ).boolean
+			.description( 'Enhance bobbing even more' )
 	;
 
 
