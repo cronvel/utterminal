@@ -48,7 +48,7 @@ var cli = require( '..' ).cli
 			//.description( "enter here your name enter here your name enter here your name enter here your name enter here your name enter here your name enter here your name" )
 		.opt( [ "age" , "a" ] ).number
 			.description( "your age" )
-	.command( 'bob' ) .description( 'It bobs everything up' )
+	.command( [ 'bob' , 'b' ] ) .description( 'It bobs everything up' )
 	;
 
 
