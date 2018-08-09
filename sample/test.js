@@ -41,12 +41,15 @@ function deb( description , variable ) {
 var cli = require( '..' ).cli
 	.package( require( '../package.json' ) )
 	.usage( 'Usage is: %s --name <name> [--age <age>]' )
-	.opt( [ "name" , "n" ] , "bob" ).string.mandatory
-	//.opt( [ "name" , "nsqmlfjkml" , "ansqmlfjkml" , "znsqmlfjkml" , "ensqmlfjkml" , "rnsqmlfjkml" , "tnsqmlfjkml" , "ynsqmlfjkml" , "unsqmlfjkml" , "insqmlfjkml" , "onsqmlfjkml" ] , "bob" ).string.mandatory
-		.description( "your name" )
-		//.description( "enter here your name enter here your name enter here your name enter here your name enter here your name enter here your name enter here your name" )
-	.opt( [ "age" , "a" ] ).number
-		.description( "your age" ) ;
+	.optionGroup( 'ASV options' )
+		.opt( [ "name" , "n" ] , "bob" ).string.mandatory
+		//.opt( [ "name" , "nsqmlfjkml" , "ansqmlfjkml" , "znsqmlfjkml" , "ensqmlfjkml" , "rnsqmlfjkml" , "tnsqmlfjkml" , "ynsqmlfjkml" , "unsqmlfjkml" , "insqmlfjkml" , "onsqmlfjkml" ] , "bob" ).string.mandatory
+			.description( "your name" )
+			//.description( "enter here your name enter here your name enter here your name enter here your name enter here your name enter here your name enter here your name" )
+		.opt( [ "age" , "a" ] ).number
+			.description( "your age" )
+	.command( 'bob' ) .description( 'It bobs everything up' )
+	;
 
 
 /*
