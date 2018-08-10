@@ -53,6 +53,7 @@ var cli = require( '..' ).cli
 			.description( "your age" )
 	.command( [ 'bob' , 'b' ] ) .description( 'It bobs everything up' )
 		//.details( "mlsjdflmjslk" )
+		.arg( 'thing' ).description( 'The thing to bob' )
 		.opt( 'supa' , false ).boolean
 			.description( 'Enhance bobbing even more' )
 	;
