@@ -40,7 +40,7 @@ function deb( description , variable ) {
 
 var cli = require( '..' ).cli
 	.package( require( '../package.json' ) )
-	.usage( 'Usage is: %s --name <name> [--age <age>]' )
+	//.usage( '--name <name> [--age <age>]' )
 	.commonCommands
 	.commonOptions
 	//.details( "mlsjdflmjslk" )
@@ -54,6 +54,7 @@ var cli = require( '..' ).cli
 	.command( [ 'bob' , 'b' ] ) .description( 'It bobs everything up' )
 		//.details( "mlsjdflmjslk" )
 		.arg( 'thing' ).description( 'The thing to bob' )
+		.restArgs( 'secondaryThings' ).description( 'More things to bob' )
 		.opt( 'supa' , false ).boolean
 			.description( 'Enhance bobbing even more' )
 	;
