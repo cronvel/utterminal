@@ -53,7 +53,7 @@ var cli = require( '..' ).cli
 			.description( "your age" )
 	.command( [ 'bob' , 'b' ] ) .description( 'It bobs everything up' )
 		//.details( "mlsjdflmjslk" )
-		.opt( 'supa' ).boolean
+		.opt( 'supa' , false ).boolean
 			.description( 'Enhance bobbing even more' )
 	;
 
@@ -65,5 +65,5 @@ deb( "CLI options" , args ) ;
 */
 
 var args = cli.run() ;
-deb( "CLI options" , args ) ;
+deb( "CLI arguments" , args ) ;
 

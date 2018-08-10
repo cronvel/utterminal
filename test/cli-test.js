@@ -38,9 +38,9 @@ describe( "Raw parser" , () => {
 	
 	it( "without flags" , () => {
 		expect( cli.parse( [] ) ).to.equal( {} ) ;
-		expect( cli.parse( [ 'file.txt' ] ) ).to.equal( { _: [ 'file.txt' ] } ) ;
-		expect( cli.parse( [ 'source.txt' , 'destination.txt' ] ) ).to.equal( { _: [ 'source.txt' , 'destination.txt' ] } ) ;
-		expect( cli.parse( [ 'one' , 'two' , 'three' ] ) ).to.equal( { _: [ 'one' , 'two' , 'three' ] } ) ;
+		expect( cli.parse( [ 'file.txt' ] ) ).to.equal( { rest: [ 'file.txt' ] } ) ;
+		expect( cli.parse( [ 'source.txt' , 'destination.txt' ] ) ).to.equal( { rest: [ 'source.txt' , 'destination.txt' ] } ) ;
+		expect( cli.parse( [ 'one' , 'two' , 'three' ] ) ).to.equal( { rest: [ 'one' , 'two' , 'three' ] } ) ;
 	} ) ;
 	
 	it( "single char flags only" , () => {
@@ -88,11 +88,11 @@ describe( "Raw parser" , () => {
 	} ) ;
 	
 	it( "remainder values after a '--'" , () => {
-		expect( cli.parse( [ '--force' , '--' , 'value' ] ) ).to.equal( { force: true , _: [ 'value' ] } ) ;
-		expect( cli.parse( [ '--force' , '--' , 'value1' , 'value2' , 'value3'] ) ).to.equal( { force: true , _: [ 'value1' , 'value2' , 'value3' ] } ) ;
-		expect( cli.parse( [ '--force' , '--' , '--optimize' ] ) ).to.equal( { force: true , _: [ '--optimize' ] } ) ;
-		expect( cli.parse( [ '--force' , '--' , '--optimize' , 'val' , '--opt' ] ) ).to.equal( { force: true , _: [ '--optimize' , 'val' , '--opt' ] } ) ;
-		expect( cli.parse( [ '--force' , '--' , '--optimize' , 'val' , '--' , '--opt' ] ) ).to.equal( { force: true , _: [ '--optimize' , 'val' , '--' , '--opt' ] } ) ;
+		expect( cli.parse( [ '--force' , '--' , 'value' ] ) ).to.equal( { force: true , rest: [ 'value' ] } ) ;
+		expect( cli.parse( [ '--force' , '--' , 'value1' , 'value2' , 'value3'] ) ).to.equal( { force: true , rest: [ 'value1' , 'value2' , 'value3' ] } ) ;
+		expect( cli.parse( [ '--force' , '--' , '--optimize' ] ) ).to.equal( { force: true , rest: [ '--optimize' ] } ) ;
+		expect( cli.parse( [ '--force' , '--' , '--optimize' , 'val' , '--opt' ] ) ).to.equal( { force: true , rest: [ '--optimize' , 'val' , '--opt' ] } ) ;
+		expect( cli.parse( [ '--force' , '--' , '--optimize' , 'val' , '--' , '--opt' ] ) ).to.equal( { force: true , rest: [ '--optimize' , 'val' , '--' , '--opt' ] } ) ;
 	} ) ;
 	
 	it( "auto-array on option repetition" , () => {
@@ -124,10 +124,10 @@ describe( "Raw parser" , () => {
 	} ) ;
 	
 	it( "mixing things up" , () => {
-		expect( cli.parse( [ '--input' , 'src' , 'dest' ] ) ).to.equal( { input: 'src' , _: [ 'dest' ] } ) ;
-		expect( cli.parse( [ 'dest' , '--input' , 'src' , 'more' , 'values' ] ) ).to.equal( { input: 'src' , _: [ 'dest' , 'more' , 'values' ] } ) ;
-		expect( cli.parse( [ '-xvzfi' , 'src' , 'dest' ] ) ).to.equal( { x: true , v: true , z: true , f: true , i: 'src' , _: [ 'dest' ] } ) ;
-		expect( cli.parse( [ '--input' , 'src' , '--output=dest' , 'more' ] ) ).to.equal( { input: 'src' , output: 'dest' , _: [ 'more' ] } ) ;
+		expect( cli.parse( [ '--input' , 'src' , 'dest' ] ) ).to.equal( { input: 'src' , rest: [ 'dest' ] } ) ;
+		expect( cli.parse( [ 'dest' , '--input' , 'src' , 'more' , 'values' ] ) ).to.equal( { input: 'src' , rest: [ 'dest' , 'more' , 'values' ] } ) ;
+		expect( cli.parse( [ '-xvzfi' , 'src' , 'dest' ] ) ).to.equal( { x: true , v: true , z: true , f: true , i: 'src' , rest: [ 'dest' ] } ) ;
+		expect( cli.parse( [ '--input' , 'src' , '--output=dest' , 'more' ] ) ).to.equal( { input: 'src' , output: 'dest' , rest: [ 'more' ] } ) ;
 	} ) ;
 } ) ;
 
@@ -156,15 +156,40 @@ describe( "Advanced parser options and post-processing" , () => {
 		
 		expect( cli.parse( [ 'src' ] ) ).to.equal( { input: 'src' } ) ;
 		expect( cli.parse( [ 'src' , 'dest' ] ) ).to.equal( { input: 'src' , output: 'dest' } ) ;
-		expect( cli.parse( [ 'src' , 'dest' , 'more' ] ) ).to.equal( { input: 'src' , output: 'dest' , _: [ 'more' ] } ) ;
-		expect( cli.parse( [ '--name' , 'bob' , 'src' , 'dest' , 'more' ] ) ).to.equal( { name: 'bob' , input: 'src' , output: 'dest' , _: [ 'more' ] } ) ;
-		expect( cli.parse( [ 'src' , '--name' , 'bob' , 'dest' , 'more' ] ) ).to.equal( { name: 'bob' , input: 'src' , output: 'dest' , _: [ 'more' ] } ) ;
+		expect( cli.parse( [ 'src' , 'dest' , 'more' ] ) ).to.equal( { input: 'src' , output: 'dest' , rest: [ 'more' ] } ) ;
+		expect( cli.parse( [ '--name' , 'bob' , 'src' , 'dest' , 'more' ] ) ).to.equal( { name: 'bob' , input: 'src' , output: 'dest' , rest: [ 'more' ] } ) ;
+		expect( cli.parse( [ 'src' , '--name' , 'bob' , 'dest' , 'more' ] ) ).to.equal( { name: 'bob' , input: 'src' , output: 'dest' , rest: [ 'more' ] } ) ;
 		expect( cli.parse( [ '--input' , 'src' ] ) ).to.equal( { input: 'src' } ) ;
 	} ) ;
 	
-	it( "forbid unknown options with the 'strict' mode" , () => {
-		var cli = new Cli() ;
+	it( "options key'd list arg and rest args" , () => {
+		var cli ;
 		
+		cli = new Cli() ;
+		cli
+			.arg( 'output' )
+			.restArgs( 'input' )
+		
+		expect( cli.parse( [ 'dest' ] ) ).to.equal( { output: 'dest' } ) ;
+		expect( cli.parse( [ 'dest' , 'src' ] ) ).to.equal( { output: 'dest' , input: [ 'src' ] } ) ;
+		expect( cli.parse( [ 'dest' , 'src1' , 'src2' , 'src3' ] ) ).to.equal( { output: 'dest' , input: [ 'src1' , 'src2' , 'src3' ] } ) ;
+		expect( cli.parse( [ '--name' , 'bob' , 'dest' , 'src1' , 'src2' ] ) ).to.equal( { name: 'bob' , output: 'dest' , input: [ 'src1' , 'src2' ] } ) ;
+		expect( cli.parse( [ 'dest' , '--name' , 'bob' , 'src1' , 'src2' ] ) ).to.equal( { name: 'bob' , output: 'dest' , input: [ 'src1' , 'src2' ] } ) ;
+		
+		cli = new Cli() ;
+		cli.restArgs( 'input' )
+		
+		expect( cli.parse( [] ) ).to.equal( {} ) ;
+		expect( cli.parse( [ 'src' ] ) ).to.equal( { input: [ 'src' ] } ) ;
+		expect( cli.parse( [ 'src1' , 'src2' , 'src3' ] ) ).to.equal( { input: [ 'src1' , 'src2' , 'src3' ] } ) ;
+		expect( cli.parse( [ '--name' , 'bob' , 'src1' , 'src2' ] ) ).to.equal( { name: 'bob' , input: [ 'src1' , 'src2' ] } ) ;
+		expect( cli.parse( [ 'src1' , '--name' , 'bob' , 'src2' ] ) ).to.equal( { name: 'bob' , input: [ 'src1' , 'src2' ] } ) ;
+	} ) ;
+	
+	it( "forbid unknown options with the 'strict' mode" , () => {
+		var cli ;
+		
+		cli = new Cli() ;
 		cli.strict
 			.opt( [ 'input' , 'i' ] )
 			.opt( [ 'output' , 'o' ] )
@@ -175,6 +200,34 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( () => cli.parse( [ '--bad-opt' ] ) ).to.throw() ;
 		expect( cli.parse( [ 'my.log' ] ) ).to.equal( { logPath: 'my.log' } ) ;
 		expect( () => cli.parse( [ 'my.log' , 'extra' ] ) ).to.throw() ;
+		
+		cli = new Cli() ;
+		cli.strict
+			.opt( [ 'input' , 'i' ] )
+			.opt( [ 'output' , 'o' ] ) ;
+		
+		expect( () => cli.parse( [ 'my.log' ] ) ).to.throw() ;
+		expect( () => cli.parse( [ 'my.log' , 'extra' ] ) ).to.throw() ;
+		
+		cli = new Cli() ;
+		cli.strict
+			.opt( [ 'input' , 'i' ] )
+			.opt( [ 'output' , 'o' ] )
+			.arg( 'logPath' )
+			.restArgs( 'moreLogPath' ) ;
+		
+		expect( cli.parse( [ 'my.log' ] ) ).to.equal( { logPath: 'my.log' } ) ;
+		expect( cli.parse( [ 'my.log' , 'extra' ] ) ).to.equal( { logPath: 'my.log' , moreLogPath: [ 'extra' ] } ) ;
+		expect( cli.parse( [ 'my.log' , 'extra1' , 'extra2' , 'extra3' ] ) ).to.equal( { logPath: 'my.log' , moreLogPath: [ 'extra1' , 'extra2' , 'extra3' ] } ) ;
+		
+		cli = new Cli() ;
+		cli.strict
+			.opt( [ 'input' , 'i' ] )
+			.opt( [ 'output' , 'o' ] )
+			.restArgs( 'moreLogPath' ) ;
+		
+		expect( cli.parse( [ 'extra' ] ) ).to.equal( { moreLogPath: [ 'extra' ] } ) ;
+		expect( cli.parse( [ 'extra1' , 'extra2' , 'extra3' ] ) ).to.equal( { moreLogPath: [ 'extra1' , 'extra2' , 'extra3' ] } ) ;
 	} ) ;
 	
 	it( "mandatory options" , () => {
@@ -187,6 +240,34 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( cli.parse( [ 'src' , '--output' , 'dest' ] ) ).to.equal( { input: 'src' , output: 'dest' } ) ;
 		expect( () => cli.parse( [ '--output' , 'dest' ] ) ).to.throw() ;
 		expect( () => cli.parse( [ 'src' ] ) ).to.throw() ;
+	} ) ;
+	
+	it( "default option's values" , () => {
+		var cli ;
+		
+		cli = new Cli() ;
+		cli
+			.opt( 'optimize' , false )
+			.opt( 'output' , 'a.out' )
+			.arg( 'input' , '<stdin>' ) ;
+		
+		expect( cli.parse( [ 'src' , '--output' , 'dest' ] ) ).to.equal( { input: 'src' , output: 'dest' , optimize: false } ) ;
+		expect( cli.parse( [ '--output' , 'dest' ] ) ).to.equal( { input: '<stdin>' , output: 'dest' , optimize: false } ) ;
+		expect( cli.parse( [ 'src' ] ) ).to.equal( { input: 'src' , output: 'a.out' , optimize: false } ) ;
+		expect( cli.parse( [] ) ).to.equal( { input: '<stdin>' , output: 'a.out' , optimize: false } ) ;
+		expect( cli.parse( [ 'src' , '--optimize' ] ) ).to.equal( { input: 'src' , output: 'a.out' , optimize: true } ) ;
+		
+		cli = new Cli() ;
+		cli.restArgs( 'input' ) ;
+		
+		expect( cli.parse( [] ) ).to.equal( {} ) ;
+		expect( cli.parse( [ 'src1' , 'src2' ] ) ).to.equal( { input: [ 'src1' , 'src2' ] } ) ;
+
+		cli = new Cli() ;
+		cli.restArgs( 'input' , true ) ;
+		
+		expect( cli.parse( [] ) ).to.equal( { input: [] } ) ;
+		expect( cli.parse( [ 'src1' , 'src2' ] ) ).to.equal( { input: [ 'src1' , 'src2' ] } ) ;
 	} ) ;
 	
 	it( "when an exclusive option is set, mandatory options are not required anymore" , () => {
@@ -215,7 +296,9 @@ describe( "Advanced parser options and post-processing" , () => {
 			.opt( 'array' ).array
 			.opt( 'stringArray' ).arrayOfStrings
 			.opt( 'booleanArray' ).arrayOfBooleans
-			.opt( 'numberArray' ).arrayOfNumbers ;
+			.opt( 'numberArray' ).arrayOfNumbers
+			.arg( 'numArg' ).number
+			.restArgs( 'numRestArgs' ).arrayOfNumbers ;
 		
 		expect( cli.parse( [ '--input' , 'src' ] ) ).to.equal( { input: 'src' } ) ;
 		expect( cli.parse( [ '--input' , 'yes' ] ) ).to.equal( { input: 'yes' } ) ;
@@ -258,6 +341,14 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( cli.parse( [ '--numberArray' , '1' , '--numberArray' , '2' , '--numberArray' , '3' ] ) )
 			.to.equal( { numberArray: [ 1,2,3 ] } ) ;
 		expect( () => cli.parse( [ '--numberArray' , 'value' ] ) ).to.throw() ;
+		
+		expect( cli.parse( [ '1' ] ) ).to.equal( { numArg: 1 } ) ;
+		expect( () => cli.parse( [ 'value' ] ) ).to.throw() ;
+		
+		expect( cli.parse( [ '1' , '2' , '3' , '456' ] ) ).to.equal( { numArg: 1 , numRestArgs: [ 2 , 3 , 456 ] } ) ;
+		expect( () => cli.parse( [ '1' , 'value' ] ) ).to.throw() ;
+		expect( () => cli.parse( [ '1' , '2' , '3' , 'value' ] ) ).to.throw() ;
+		expect( () => cli.parse( [ '1' , '2' , '3' , 'value' , '456' ] ) ).to.throw() ;
 	} ) ;
 	
 	it( "commands with merged options" , () => {
