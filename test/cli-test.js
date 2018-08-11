@@ -123,11 +123,17 @@ describe( "Raw parser" , () => {
 		expect( cli.parse( [ '--path.to.key' , 'value' ] ) ).to.equal( { path: { to: { key: 'value' } } } ) ;
 	} ) ;
 	
+	it( "single hyphen" , () => {
+		expect( cli.parse( [ '--input' , '-' ] ) ).to.equal( { input: '-' } ) ;
+		expect( cli.parse( [ '--input' , 'src' , '-' ] ) ).to.equal( { input: 'src' , rest: [ '-' ] } ) ;
+	} ) ;
+	
 	it( "mixing things up" , () => {
 		expect( cli.parse( [ '--input' , 'src' , 'dest' ] ) ).to.equal( { input: 'src' , rest: [ 'dest' ] } ) ;
 		expect( cli.parse( [ 'dest' , '--input' , 'src' , 'more' , 'values' ] ) ).to.equal( { input: 'src' , rest: [ 'dest' , 'more' , 'values' ] } ) ;
 		expect( cli.parse( [ '-xvzfi' , 'src' , 'dest' ] ) ).to.equal( { x: true , v: true , z: true , f: true , i: 'src' , rest: [ 'dest' ] } ) ;
 		expect( cli.parse( [ '--input' , 'src' , '--output=dest' , 'more' ] ) ).to.equal( { input: 'src' , output: 'dest' , rest: [ 'more' ] } ) ;
+		expect( cli.parse( [ '--input' , 'src' , '--output=dest' , '-' ] ) ).to.equal( { input: 'src' , output: 'dest' , rest: [ '-' ] } ) ;
 	} ) ;
 } ) ;
 
