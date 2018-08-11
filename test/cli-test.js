@@ -357,6 +357,24 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( () => cli.parse( [ '1' , '2' , '3' , 'value' , '456' ] ) ).to.throw() ;
 	} ) ;
 	
+	it( "flag options does not eat the next argument" , () => {
+		var cli ;
+		
+		cli = new Cli() ;
+		cli.opt( [ 'optimize' , 'o' ] )
+			.arg( 'output' )
+		
+		expect( cli.parse( [ '--optimize' , 'dest' ] ) ).to.equal( { optimize: 'dest' } ) ;
+		expect( cli.parse( [ '-o' , 'dest' ] ) ).to.equal( { optimize: 'dest' } ) ;
+		
+		cli = new Cli() ;
+		cli.opt( [ 'optimize' , 'o' ] ).flag
+			.arg( 'output' )
+		
+		expect( cli.parse( [ '--optimize' , 'dest' ] ) ).to.equal( { optimize: true , output: 'dest' } ) ;
+		expect( cli.parse( [ '-o' , 'dest' ] ) ).to.equal( { optimize: true , output: 'dest' } ) ;
+	} ) ;
+	
 	it( "commands with merged options" , () => {
 		var cli = new Cli() ;
 		
