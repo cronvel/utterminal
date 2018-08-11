@@ -294,11 +294,11 @@ describe( "Advanced parser options and post-processing" , () => {
 			.opt( 'input' ).string
 			.opt( 'object' ).object
 			.opt( 'array' ).array
-			.opt( 'stringArray' ).arrayOfStrings
-			.opt( 'booleanArray' ).arrayOfBooleans
-			.opt( 'numberArray' ).arrayOfNumbers
+			.opt( 'stringArray' ).arrayOf.string
+			.opt( 'booleanArray' ).arrayOf.boolean
+			.opt( 'numberArray' ).arrayOf.number
 			.arg( 'numArg' ).number
-			.restArgs( 'numRestArgs' ).arrayOfNumbers ;
+			.restArgs( 'numRestArgs' ).arrayOf.number ;
 		
 		expect( cli.parse( [ '--input' , 'src' ] ) ).to.equal( { input: 'src' } ) ;
 		expect( cli.parse( [ '--input' , 'yes' ] ) ).to.equal( { input: 'yes' } ) ;
