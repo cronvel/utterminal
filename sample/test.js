@@ -56,7 +56,13 @@ var cli = require( '..' ).cli
 		.arg( 'thing' ).description( 'The thing to bob' )
 		.restArgs( 'secondaryThings' ).description( 'More things to bob' )
 		.opt( 'supa' , false ).boolean
+			.description( 'Enhance bobbing more' )
+		.opt( 'hyper' , false ).boolean
 			.description( 'Enhance bobbing even more' )
+		.opt( 'level' , 0 ).number
+			.description( 'Bobbing level' )
+		.opt( 'max' ).boolean.shorthand( { supa: true , hyper: true , level: 5 } )
+			.description( 'Maximally enhance bobbing' )
 	;
 
 

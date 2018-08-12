@@ -289,21 +289,23 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( cli.parse( [ '--fast' ] ) ).to.equal( { fast: true } ) ;
 		expect( cli.parse( [ '--optimize' ] ) ).to.equal( { fast: true , memory: true , optimize: true } ) ;
 		expect( cli.parse( [ '--fast' , '--optimize' ] ) ).to.equal( { fast: true , memory: true , optimize: true } ) ;
+		expect( cli.parse( [ '--optimize' , '--fast' ] ) ).to.equal( { fast: true , memory: true , optimize: true } ) ;
 	} ) ;
 	
-	it( "short-hand options" , () => {
+	it( "shorthand options" , () => {
 		var cli ;
 		
 		cli = new Cli() ;
 		cli
 			.opt( 'fast' )
 			.opt( 'memory' )
-			.opt( 'optimize' ).shortHand( { fast: true , memory: true } ) ;
+			.opt( 'optimize' ).shorthand( { fast: true , memory: true } ) ;
 		
 		expect( cli.parse( [] ) ).to.equal( {} ) ;
 		expect( cli.parse( [ '--fast' ] ) ).to.equal( { fast: true } ) ;
 		expect( cli.parse( [ '--optimize' ] ) ).to.equal( { fast: true , memory: true } ) ;
 		expect( cli.parse( [ '--fast' , '--optimize' ] ) ).to.equal( { fast: true , memory: true } ) ;
+		expect( cli.parse( [ '--optimize' , '--fast' ] ) ).to.equal( { fast: true , memory: true } ) ;
 	} ) ;
 	
 	it( "when an exclusive option is set, mandatory options are not required anymore" , () => {
