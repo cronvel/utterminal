@@ -276,6 +276,36 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( cli.parse( [ 'src1' , 'src2' ] ) ).to.equal( { input: [ 'src1' , 'src2' ] } ) ;
 	} ) ;
 	
+	it( "option that imply other options" , () => {
+		var cli ;
+		
+		cli = new Cli() ;
+		cli
+			.opt( 'fast' )
+			.opt( 'memory' )
+			.opt( 'optimize' ).imply( { fast: true , memory: true } ) ;
+		
+		expect( cli.parse( [] ) ).to.equal( {} ) ;
+		expect( cli.parse( [ '--fast' ] ) ).to.equal( { fast: true } ) ;
+		expect( cli.parse( [ '--optimize' ] ) ).to.equal( { fast: true , memory: true , optimize: true } ) ;
+		expect( cli.parse( [ '--fast' , '--optimize' ] ) ).to.equal( { fast: true , memory: true , optimize: true } ) ;
+	} ) ;
+	
+	it( "short-hand options" , () => {
+		var cli ;
+		
+		cli = new Cli() ;
+		cli
+			.opt( 'fast' )
+			.opt( 'memory' )
+			.opt( 'optimize' ).shortHand( { fast: true , memory: true } ) ;
+		
+		expect( cli.parse( [] ) ).to.equal( {} ) ;
+		expect( cli.parse( [ '--fast' ] ) ).to.equal( { fast: true } ) ;
+		expect( cli.parse( [ '--optimize' ] ) ).to.equal( { fast: true , memory: true } ) ;
+		expect( cli.parse( [ '--fast' , '--optimize' ] ) ).to.equal( { fast: true , memory: true } ) ;
+	} ) ;
+	
 	it( "when an exclusive option is set, mandatory options are not required anymore" , () => {
 		var cli = new Cli() ;
 		
