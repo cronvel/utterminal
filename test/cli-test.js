@@ -29,6 +29,7 @@
 
 
 const Cli = require( '..' ).cli.Cli ;
+const path = require( 'path' ) ;
 
 
 
@@ -290,6 +291,9 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( cli.parse( [ '--optimize' ] ) ).to.equal( { fast: true , memory: true , optimize: true } ) ;
 		expect( cli.parse( [ '--fast' , '--optimize' ] ) ).to.equal( { fast: true , memory: true , optimize: true } ) ;
 		expect( cli.parse( [ '--optimize' , '--fast' ] ) ).to.equal( { fast: true , memory: true , optimize: true } ) ;
+		
+		// there are not automatically turned to flags
+		expect( cli.parse( [ '--optimize' , 'arg' ] ) ).to.equal( { fast: true , memory: true , optimize: 'arg' } ) ;
 	} ) ;
 	
 	it( "shorthand options" , () => {
@@ -306,6 +310,9 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( cli.parse( [ '--optimize' ] ) ).to.equal( { fast: true , memory: true } ) ;
 		expect( cli.parse( [ '--fast' , '--optimize' ] ) ).to.equal( { fast: true , memory: true } ) ;
 		expect( cli.parse( [ '--optimize' , '--fast' ] ) ).to.equal( { fast: true , memory: true } ) ;
+		
+		// shorthands are always flags
+		expect( cli.parse( [ '--optimize' , 'arg' ] ) ).to.equal( { fast: true , memory: true , rest: [ 'arg' ] } ) ;
 	} ) ;
 	
 	it( "when an exclusive option is set, mandatory options are not required anymore" , () => {
@@ -561,6 +568,24 @@ describe( "Advanced parser options and post-processing" , () => {
 			.command( 'push' ) ;
 		
 		expect( cli.parse( [ 'push' , '--verbose' ] ) ).to.equal( { command: 'push' , commandOptions: { verbose: true } } ) ;
+	} ) ;
+	
+	it( "config loading and precedence" , () => {
+		var cli ,
+			configPath = path.join( __dirname , 'test-config.json' ) ;
+		
+		cli = new Cli() ;
+		cli
+			.opt( 'optimize' ).flag
+			.opt( 'level' ).number
+			.arg( 'configPath' ).config ;
+		
+		expect( cli.parse( [ configPath ] ) ).to.equal( { optimize: true , level: 3 , configPath: configPath } ) ;
+		expect( cli.parse( [ configPath , '--optimize' ] ) ).to.equal( { optimize: true , level: 3 , configPath: configPath } ) ;
+		expect( cli.parse( [ '--optimize' , configPath ] ) ).to.equal( { optimize: true , level: 3 , configPath: configPath } ) ;
+		expect( cli.parse( [ configPath , '--no-optimize' ] ) ).to.equal( { optimize: false , level: 3 , configPath: configPath } ) ;
+		expect( cli.parse( [ '--no-optimize' , configPath ] ) ).to.equal( { optimize: false , level: 3 , configPath: configPath } ) ;
+		expect( cli.parse( [ configPath , '--level' , '2' ] ) ).to.equal( { optimize: true , level: 2 , configPath: configPath } ) ;
 	} ) ;
 } ) ;
 

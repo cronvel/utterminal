@@ -42,7 +42,6 @@ var cli = require( '..' ).cli
 	.package( require( '../package.json' ) )
 	//.usage( '--name <name> [--age <age>]' )
 	.commonCommands
-	/*
 	.commonOptions
 	//.setIntro( false )
 	//.details( "mlsjdflmjslk" )
@@ -65,7 +64,6 @@ var cli = require( '..' ).cli
 			.description( 'Bobbing level' )
 		.opt( 'max' ).boolean.shorthand( { supa: true , hyper: true , level: 5 } )
 			.description( 'Maximally enhance bobbing' )
-	*/
 	;
 
 
