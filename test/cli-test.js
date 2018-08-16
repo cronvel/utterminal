@@ -587,6 +587,21 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( cli.parse( [ '--no-optimize' , configPath ] ) ).to.equal( { optimize: false , level: 3 , configPath: configPath } ) ;
 		expect( cli.parse( [ configPath , '--level' , '2' ] ) ).to.equal( { optimize: true , level: 2 , configPath: configPath } ) ;
 	} ) ;
+	
+	it( ".loadConfig() loading and precedence" , () => {
+		var cli ,
+			configPath = path.join( __dirname , 'test-config.json' ) ;
+		
+		cli = new Cli() ;
+		cli
+			.opt( 'optimize' ).flag
+			.opt( 'level' ).number ;
+		
+		expect( cli.loadConfig( configPath , cli.parse( [] ) ) ).to.equal( { optimize: true , level: 3 } ) ;
+		expect( cli.loadConfig( configPath , cli.parse( [ '--optimize' ] ) ) ).to.equal( { optimize: true , level: 3 } ) ;
+		expect( cli.loadConfig( configPath , cli.parse( [ '--no-optimize' ] ) ) ).to.equal( { optimize: false , level: 3 } ) ;
+		expect( cli.loadConfig( configPath , cli.parse( [ '--level' , '2' ] ) ) ).to.equal( { optimize: true , level: 2 } ) ;
+	} ) ;
 } ) ;
 
 
