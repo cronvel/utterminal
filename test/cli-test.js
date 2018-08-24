@@ -602,6 +602,28 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( cli.loadConfig( configPath , cli.parse( [ '--no-optimize' ] ) ) ).to.equal( { optimize: false , level: 3 } ) ;
 		expect( cli.loadConfig( configPath , cli.parse( [ '--level' , '2' ] ) ) ).to.equal( { optimize: true , level: 2 } ) ;
 	} ) ;
+
+	it( "camelCase post-processing" , () => {
+		var cli ;
+		
+		cli = new Cli() ;
+		cli.strict.split.camel
+			.opt( 'verbose-log' ).boolean
+			.command( 'push' )
+				.opt( 'all-tags' ).boolean
+			.command( 'commit' )
+				.opt( [ 'commit-message' , 'm' ] ).string
+				.arg( 'file' ) ;
+		
+		expect( cli.parse( [ '--verbose-log' ] ) ).to.equal( { verboseLog: true } ) ;
+		expect( cli.parse( [ 'push' ] ) ).to.equal( { command: 'push' , commandOptions: {} } ) ;
+		expect( cli.parse( [ '--verbose-log=yes' , 'push' ] ) ).to.equal( { command: 'push' , verboseLog: true , commandOptions: {} } ) ;
+		expect( cli.parse( [ '--verbose-log' , '--' , 'push' ] ) ).to.equal( { command: 'push' , verboseLog: true , commandOptions: {} } ) ;
+		expect( cli.parse( [ 'push' , '--all-tags' ] ) ).to.equal( { command: 'push' , commandOptions: { allTags: true } } ) ;
+		expect( cli.parse( [ '--verbose-log=yes' , 'push' , '--all-tags' ] ) ).to.equal( { command: 'push' , commandOptions: { allTags: true } , verboseLog: true } ) ;
+		expect( cli.parse( [ '--verbose-log' , '--' , 'push' , '--all-tags' ] ) ).to.equal( { command: 'push' , commandOptions: { allTags: true } , verboseLog: true } ) ;
+		expect( cli.parse( [ 'commit' , '--commit-message' , 'wip' ] ) ).to.equal( { command: 'commit' , commandOptions: { commitMessage: 'wip' } } ) ;
+	} ) ;
 } ) ;
 
 
