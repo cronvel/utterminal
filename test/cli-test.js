@@ -315,6 +315,22 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( cli.parse( [ '--optimize' , 'arg' ] ) ).to.equal( { fast: true , memory: true , rest: [ 'arg' ] } ) ;
 	} ) ;
 	
+	it( "complex imply/remove with argument transmission" , () => {
+		var cli ;
+		
+		cli = new Cli() ;
+		cli
+			.opt( 'fast' ).number
+			.opt( 'memory' ).number
+			.opt( 'optimize' ).number.imply( { fast: Cli.ARG , memory: Cli.ARG } ).remove ;
+		
+		expect( cli.parse( [] ) ).to.equal( {} ) ;
+		expect( cli.parse( [ '--fast' , '3' ] ) ).to.equal( { fast: 3 } ) ;
+		expect( cli.parse( [ '--optimize' , '3' ] ) ).to.equal( { fast: 3 , memory: 3 } ) ;
+		expect( cli.parse( [ '--fast' , '2' , '--optimize' , '3' ] ) ).to.equal( { fast: 3 , memory: 3 } ) ;
+		expect( cli.parse( [ '--optimize' , '3' , '--fast' , '2' ] ) ).to.equal( { fast: 3 , memory: 3 } ) ;
+	} ) ;
+	
 	it( "when an exclusive option is set, mandatory options are not required anymore" , () => {
 		var cli = new Cli() ;
 		
