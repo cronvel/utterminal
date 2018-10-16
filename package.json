@@ -16,7 +16,9 @@
     "terminal-kit": "^1.26.0",
     "tree-kit": "^0.5.27"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "logfella": "^1.0.9"
+  },
   "scripts": {
     "test": "tea-time -R dot"
   },

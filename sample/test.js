@@ -31,6 +31,7 @@
 
 var term = require( 'terminal-kit' ).terminal ;
 var string = require( 'string-kit' ) ;
+var logfella = require( 'logfella' ) ;
 
 function deb( description , variable ) {
 	console.log( description + ':\n' + string.inspect( { style: 'color' } , variable ) ) ;
@@ -76,3 +77,6 @@ deb( "CLI options" , args ) ;
 var args = cli.run() ;
 deb( "CLI arguments" , args ) ;
 
+var log = logfella.global.use( 'test' ) ;
+log.debug( "debug" ) ;
+log.trace( "trace" ) ;
