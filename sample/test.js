@@ -43,7 +43,9 @@ var cli = require( '..' ).cli
 	.package( require( '../package.json' ) )
 	//.usage( '--name <name> [--age <age>]' )
 	.commonCommands
-	.commonOptions
+	//.commonOptions
+	.helpOption
+	.addLogOptions( { mon: true } )
 	//.setIntro( false )
 	//.details( "mlsjdflmjslk" )
 	.opt( 'auto' )
