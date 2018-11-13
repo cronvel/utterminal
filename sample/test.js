@@ -46,6 +46,9 @@ var cli = require( '..' ).cli
 	.commonOptions
 	//.setIntro( false )
 	//.details( "mlsjdflmjslk" )
+	.opt( 'auto' )
+		.typeLabel( 'auto-type' )
+		.description( 'an option with auto type' )
 	.optionGroup( 'General information options' )
 		.opt( [ "name" , "n" ] , "bob" ).string//.mandatory
 		//.opt( [ "name" , "nsqmlfjkml" , "ansqmlfjkml" , "znsqmlfjkml" , "ensqmlfjkml" , "rnsqmlfjkml" , "tnsqmlfjkml" , "ynsqmlfjkml" , "unsqmlfjkml" , "insqmlfjkml" , "onsqmlfjkml" ] , "bob" ).string.mandatory
@@ -60,6 +63,8 @@ var cli = require( '..' ).cli
 		//.details( "mlsjdflmjslk" )
 		.arg( 'thing' ).description( 'The thing to bob' )
 		.restArgs( 'secondaryThings' ).description( 'More things to bob' )
+		.opt( 'supa' , false ).boolean
+			.description( 'Enhance bobbing more' )
 		.opt( 'supa' , false ).boolean
 			.description( 'Enhance bobbing more' )
 		.opt( 'hyper' , false ).boolean
