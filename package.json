@@ -1,6 +1,6 @@
 {
   "name": "utterminal",
-  "version": "0.5.20",
+  "version": "0.5.21",
   "description": "The Ultimate Terminal lib!",
   "main": "lib/utterminal.js",
   "engines": {
