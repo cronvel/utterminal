@@ -496,6 +496,7 @@ describe( "Advanced parser options and post-processing" , () => {
 				.arg( 'file' ) ;
 		
 		expect( cli.parse( [ '--verbose' ] ) ).to.equal( { verbose: true } ) ;
+		expect( cli.parse( [ '--verbose=yes' , 'push' ] ) ).to.equal( { command: 'push' , verbose: true } ) ;
 		expect( cli.parse( [ 'push' ] ) ).to.equal( { command: 'push' } ) ;
 		expect( cli.parse( [ 'commit' , '--message' , 'wip' ] ) ).to.equal( { command: 'commit' , message: 'wip' } ) ;
 		expect( () => cli.parse( [ 'commit' ] ) ).to.throw() ;
@@ -532,6 +533,7 @@ describe( "Advanced parser options and post-processing" , () => {
 				.arg( 'file' ) ;
 		
 		expect( cli.parse( [ '--verbose' ] ) ).to.equal( { verbose: true } ) ;
+		expect( cli.parse( [ '--verbose=yes' , 'push' ] ) ).to.equal( { command: 'push' , verbose: true , commandOptions: {} } ) ;
 		expect( cli.parse( [ 'push' ] ) ).to.equal( { command: 'push' , commandOptions: {} } ) ;
 		expect( cli.parse( [ 'commit' , '--message' , 'wip' ] ) ).to.equal( { command: 'commit' , commandOptions: { message: 'wip' } } ) ;
 		expect( () => cli.parse( [ 'commit' ] ) ).to.throw() ;
@@ -552,6 +554,23 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( () => cli.parse( [ 'commit' , '--message' , 'wip' ] ) ).to.throw() ;
 		expect( cli.parse( [ '--verbose=yes' , 'commit' , '--message' , 'wip' ] ) ).to.equal( { verbose: true , command: 'commit' , commandOptions: { message: 'wip' } } ) ;
 		expect( () => cli.parse( [ 'commit' ] ) ).to.throw() ;
+	} ) ;
+	
+	it( "commands with the 'commandRequired' option" , () => {
+		var cli ;
+		
+		cli = new Cli() ;
+		
+		cli.commandRequired
+			.opt( 'verbose' ).boolean
+			.command( 'push' )
+				.opt( 'tags' ).boolean
+			.command( 'commit' )
+				.opt( [ 'message' , 'm' ] ).string.mandatory
+				.arg( 'file' ) ;
+		
+		expect( () => cli.parse( [ '--verbose' ] ) ).to.throw() ;
+		expect( cli.parse( [ 'push' , '--verbose' ] ) ).to.equal( { command: 'push' , verbose: true } ) ;
 	} ) ;
 	
 	it( "commands with inherited options" , () => {
