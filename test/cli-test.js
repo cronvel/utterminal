@@ -352,6 +352,7 @@ describe( "Advanced parser options and post-processing" , () => {
 		var cli = new Cli() ;
 		cli.opt( 'flag' ).boolean
 			.opt( 'num' ).number
+			.opt( 'int' ).integer
 			.opt( 'input' ).string
 			.opt( 'object' ).object
 			.opt( 'array' ).array
@@ -376,10 +377,18 @@ describe( "Advanced parser options and post-processing" , () => {
 		expect( () => cli.parse( [ '--flag' , 'value' ] ) ).to.throw() ;
 		
 		expect( cli.parse( [ '--num' , '123' ] ) ).to.equal( { num: 123 } ) ;
+		expect( cli.parse( [ '--num=-123' ] ) ).to.equal( { num: -123 } ) ;
 		expect( cli.parse( [ '--num' , '123.456' ] ) ).to.equal( { num: 123.456 } ) ;
 		expect( () => cli.parse( [ '--num' , 'value' ] ) ).to.throw() ;
 		expect( () => cli.parse( [ '--num' , '123a' ] ) ).to.throw() ;
 		expect( () => cli.parse( [ '--num' ] ) ).to.throw() ;
+		
+		expect( cli.parse( [ '--int' , '123' ] ) ).to.equal( { int: 123 } ) ;
+		expect( cli.parse( [ '--int=-123' ] ) ).to.equal( { int: -123 } ) ;
+		expect( () => cli.parse( [ '--int' , '123.456' ] ) ).to.throw() ;
+		expect( () => cli.parse( [ '--int' , 'value' ] ) ).to.throw() ;
+		expect( () => cli.parse( [ '--int' , '123a' ] ) ).to.throw() ;
+		expect( () => cli.parse( [ '--int' ] ) ).to.throw() ;
 		
 		expect( cli.parse( [ '--object.key' , 'value' ] ) ).to.equal( { object: { key: 'value' } } ) ;
 		expect( () => cli.parse( [ '--object' , 'value' ] ) ).to.throw() ;
