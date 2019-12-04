@@ -1,6 +1,6 @@
 {
   "name": "utterminal",
-  "version": "0.5.39",
+  "version": "0.5.40",
   "description": "The Ultimate Terminal lib!",
   "main": "lib/utterminal.js",
   "engines": {
@@ -11,12 +11,12 @@
   },
   "dependencies": {
     "lazyness": "^1.1.1",
-    "string-kit": "^0.9.12",
-    "terminal-kit": "^1.31.3",
-    "tree-kit": "^0.6.1"
+    "string-kit": "^0.11.0",
+    "terminal-kit": "^1.32.0",
+    "tree-kit": "^0.6.2"
   },
   "devDependencies": {
-    "logfella": "^1.2.6"
+    "logfella": "^1.3.2"
   },
   "scripts": {
     "test": "tea-time -R dot"
