@@ -1,6 +1,6 @@
 {
   "name": "utterminal",
-  "version": "0.5.44",
+  "version": "0.5.45",
   "description": "The Ultimate Terminal lib!",
   "main": "lib/utterminal.js",
   "engines": {
@@ -38,7 +38,7 @@
     "title": "Utterminal",
     "years": [
       2018,
-      2019
+      2020
     ],
     "owner": "Cédric Ronvel"
   }
