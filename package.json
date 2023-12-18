@@ -1,10 +1,10 @@
 {
   "name": "utterminal",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "The Ultimate Terminal lib!",
   "main": "lib/utterminal.js",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=16.13.0"
   },
   "directories": {
     "test": "test"
