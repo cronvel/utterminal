@@ -129,6 +129,20 @@ describe( "Raw parser" , () => {
 		expect( cli.parse( [ '--input' , 'src' , '-' ] ) ).to.equal( { input: 'src' , rest: [ '-' ] } ) ;
 	} ) ;
 	
+	it( "string values starting with one or two hyphen" , () => {
+		expect( cli.parse( [ '--input' , '-value' ] ) ).to.equal( { input: true , v: true , a: true , l: true , u: true , e: true  } ) ;
+		expect( cli.parse( [ '--input' , '\\-value' ] ) ).to.equal( { input: "-value"  } ) ;
+		expect( cli.parse( [ '--input' , '\\value' ] ) ).to.equal( { input: "\\value"  } ) ;
+		expect( cli.parse( [ '-i' , '-value' ] ) ).to.equal( { i: true , v: true , a: true , l: true , u: true , e: true  } ) ;
+		expect( cli.parse( [ '-i' , '\\-value' ] ) ).to.equal( { i: "-value"  } ) ;
+		expect( cli.parse( [ '-i' , '\\value' ] ) ).to.equal( { i: "\\value"  } ) ;
+
+		// There is no need to escape after the double-hyphen
+		expect( cli.parse( [ '--input' , '--' , '-value' ] ) ).to.equal( { input: true , rest: [ '-value' ] } ) ;
+		expect( cli.parse( [ '--input' , '--' , '\\-value' ] ) ).to.equal( { input: true , rest: [ '\\-value' ] } ) ;
+		expect( cli.parse( [ '--input' , '--' , '\\value' ] ) ).to.equal( { input: true , rest: [ '\\value' ] } ) ;
+	} ) ;
+	
 	it( "mixing things up" , () => {
 		expect( cli.parse( [ '--input' , 'src' , 'dest' ] ) ).to.equal( { input: 'src' , rest: [ 'dest' ] } ) ;
 		expect( cli.parse( [ 'dest' , '--input' , 'src' , 'more' , 'values' ] ) ).to.equal( { input: 'src' , rest: [ 'dest' , 'more' , 'values' ] } ) ;
